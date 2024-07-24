@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import Navbar from '../nav';
-import Footer from '../footer';
-import axios from 'axios';
+import React, { useState } from "react";
+import Navbar from "../nav";
+import Footer from "../footer";
+import axios from "axios";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 const ContactUs = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -17,13 +19,14 @@ const ContactUs = () => {
 
     try {
       // Firebase Realtime Database endpoint
-      const firebaseEndpoint = 'https://cinema-website-b44c3-default-rtdb.europe-west1.firebasedatabase.app/contacts.json';
+      const firebaseEndpoint =
+        "https://cinema-website-b44c3-default-rtdb.europe-west1.firebasedatabase.app/contacts.json";
 
       // Prepare data to be submitted
       const newContact = {
         name: name,
         email: email,
-        message: message
+        message: message,
       };
 
       // Send POST request to Firebase Realtime Database
@@ -31,15 +34,30 @@ const ContactUs = () => {
 
       if (response.status === 200) {
         setSubmitSuccess(true);
-        setName('');
-        setEmail('');
-        setMessage('');
+        setName("");
+        setEmail("");
+        setMessage("");
+
+        // SweetAlert
+        Swal.fire({
+          icon: "success",
+          title: "Message submitted successfully!",
+          showConfirmButton: false,
+          timer: 2500, // Automatically close after 1.5 seconds
+          customClass: {
+            popup: "bg-blue-900", // Background color
+            title: "text-white", // Title text color
+            content: "text-white  ", // Content text color
+          },
+          width: "30rem", // Width of the alert
+          padding: "2rem", // Padding inside the alert
+        });
       } else {
-        setSubmitError('Failed to submit. Please try again later.');
+        setSubmitError("Failed to submit. Please try again later.");
       }
     } catch (error) {
-      console.error('Error submitting contact message:', error);
-      setSubmitError('Failed to submit. Please try again later.');
+      console.error("Error submitting contact message:", error);
+      setSubmitError("Failed to submit. Please try again later.");
     } finally {
       setSubmitting(false);
     }
@@ -236,11 +254,11 @@ const ContactUs = () => {
             </form>
             {submitting && <p className="text-white mt-2">Submitting...</p>}
             {submitError && <p className="text-red-900 mt-2">{submitError}</p>}
-            {submitSuccess && (
+            {/* {submitSuccess && (
               <p className="text-green-900 mt-2">
                 Message submitted successfully!
               </p>
-            )}
+            )} */}
           </div>
         </div>
       </div>

@@ -8,8 +8,6 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useNavigate } from "react-router-dom";
 
 function BuyTicket() {
-
-
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
   const [ticketsCount, setTicketsCount] = useState(0);
@@ -118,26 +116,38 @@ function BuyTicket() {
   const handleProceedToOrder = () => {
     setShowOrderForm(true);
   };
+  // هون البداية انشأنا ملف pdf
   const generateTicketPDF = () => {
+    // باستخدام مكتبة jsPDF انشأنا ال pdf
     const doc = new jsPDF();
 
     // Background Color
+    // هون دخلنا داخل ال pdf بدأنا نعطيه تنسيق
     doc.setFillColor(245, 245, 245);
+    // rect هو الامر الي بيرسم مستطيل والارقام هي احداثيات المستطيل
     doc.rect(
       0,
       0,
+      // هون بحدد عرض وارتفاع ال pdf  بشكل افتراضي
       doc.internal.pageSize.width,
       doc.internal.pageSize.height,
+      // يقصد فيها الشاشة تكون full
       "F"
     );
 
     // Title
+    // بعد ما خلصنا من pdf وشكله صار وقت شكل النص وحجمه وموقعه احدده
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(20);
+    // text, x, y, flags, angle, align;
     doc.text(`Ticket Order Details`, 105, 15, null, null, "center");
 
     // Customer Information
+    // رتبت ال pdf ورتبت النص صار وقت ازد بالبيانات تبعتي نبدأ ببيانات المستخدم
     doc.setFontSize(12);
+    //  هلأ doc.text هاي الباب لحتى ادخل النص تبعي
+    // بناي ع ال pdf من اسمه وبعدها الي هو doc وبعدها بخبره بالاضافة الي بدي اعملها عن طريق text
+    // هلأ هاي القيم هي عبارة عن الوضع الافقي والعمودي لنص
     doc.text(`Customer Name: ${name}`, 10, 30);
     doc.text(`Email: ${email}`, 10, 40);
     doc.text(`Address: ${address}`, 10, 50);
@@ -146,6 +156,9 @@ function BuyTicket() {
     doc.text(`Movie Title: ${movie.title}`, 10, 80);
     doc.text(`Number of Regular Tickets: ${ticketsCount}`, 10, 90);
     doc.text(
+      // القصة الي صارت هون انو بدي اشوف في خصم او لأ لحتى اطبعه مع ال order 
+      // بسأل هل قيمة الخصم اكبر من 0 لحظتها يعني في خصم روح جيب قيمة الخصم وقصده بال fixed انو خد بس اول رقمين عشرين
+      //   اذا لأ ما في خصم طلع قيمة السعر الحقيقية
       `Total Price: ${
         discountedPrice > 0 ? discountedPrice.toFixed(2) : totalPrice.toFixed(2)
       } $`,

@@ -1,74 +1,100 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import Navbar from "../nav";
 import Footer from "../footer";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase-config/firebase";
+import user from "../assets/user.png";
+
 const Profile = () => {
-  const [name, setName] = useState("");
+  const navigate = useNavigate();
+  const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    const storageName = sessionStorage.getItem("name") || "";
-    const storageEmail = sessionStorage.getItem("email") || "";
-    const storagePassword = sessionStorage.getItem("password") || "";
+    const currentUser = auth.currentUser;
 
-    setName(storageName);
-    setEmail(storageEmail);
-    setPassword(storagePassword);
-  }, []);
+    if (currentUser) {
+      setDisplayName(currentUser.displayName || "");
+      setEmail(currentUser.email || "");
+      const storedPassword = sessionStorage.getItem("password") || "";
+      setPassword(storedPassword);
+    } else {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    sessionStorage.setItem("name", name);
-    sessionStorage.setItem("email", email);
+    const userData = {
+      displayName,
+      email,
+      password,
+    };
+
+    sessionStorage.setItem("user", JSON.stringify(userData));
     sessionStorage.setItem("password", password);
 
-    alert("Updated successfully");
+    alert("Profile updated successfully");
   };
 
   return (
-    <div className="Container">
+    <div className="min-h-screen bg-gray-900 text-white">
       <Navbar />
-      <section className="bg-page py-48 bg-gray-900">
-        <div className="container mx-auto px-4">
-          <div className="max-w-lg mx-auto bg-gray-800 shadow-lg rounded-lg border border-gray-400">
+      <div className="container mx-auto px-4 mb-20">
+        <div className="flex justify-center mt-20">
+          <div className="w-full md:w-1/4 bg-gray-800 shadow-lg rounded-lg border border-gray-400">
             <div className="flex flex-col items-center py-8 px-6">
-              <form className="w-full" onSubmit={handleSubmit}>
-                <div className="mb-4">
+              <div className="mb-4 mt-14">
+                <img
+                  src={user}
+                  alt="User Image"
+                  className="rounded-full h-24 w-24 mb-2 mx-12"
+                />
+                <p className="text-white text-center text-lg font-bold mb-4">
+                  {displayName}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="w-full md:max-w-lg bg-gray-800 shadow-lg rounded-lg border border-gray-400 ml-4">
+            <div className="flex flex-col items-center py-8 px-6">
+              <form onSubmit={handleSubmit} className="w-full">
+                <div className="mb-4 w-full">
                   <label
-                    htmlFor="username"
-                    className="block text-white mt-2 text-lg font-Caveat"
+                    htmlFor="full-name"
+                    className="block text-white text-lg mb-2"
+                  >
+                    Full Name:
+                  </label>
+                  <input
+                    type="text"
+                    id="full-name"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    className="block w-full px-3 py-2 border bg-transparent mt-3 border-gray-200 rounded-md shadow-sm text-gray-400 focus:outline-none focus:border-blue-900"
+                  />
+                </div>
+                <div className="mb-4 w-full">
+                  <label
+                    htmlFor="email"
+                    className="block text-white text-lg mb-2"
                   >
                     Email:
                   </label>
                   <input
-                    type="text"
-                    id="username"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className=" block w-full px-3 py-2 border bg-transparent mt-3 border-gray-200 rounded-md shadow-sm text-gray-400 focus:outline-none focus:border-blue-900"
+                    type="email"
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="block w-full px-3 py-2 border bg-transparent mt-3 border-gray-200 rounded-md shadow-sm text-gray-400 focus:outline-none focus:border-blue-900"
                   />
                 </div>
-                <div className="mb-4">
-                  
-                  <label
-                    htmlFor="password"
-                    className="block text-white mt-2 text-lg font-Caveat"
-                  >
-                    Password:
-                  </label>
-                  <input
-                    type="password" // Added type="password" for better security
-                    id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className=" block w-full px-3 py-2 border bg-transparent mt-3 border-gray-200 rounded-md shadow-sm text-gray-400 focus:outline-none focus:border-blue-900"
-                  />
-                </div>
+
                 <button
                   type="submit"
-                  className=" text-white  bg-gray-700 hover:bg-blue-900  px-6 py-2 rounded-md shadow-md hover:bg-red2 focus:outline-none focus:ring-2 focus:ring-white mt-2"
+                  className="text-white bg-gray-700 hover:bg-blue-900 px-6 py-2 rounded-md shadow-md hover:bg-red2 focus:outline-none focus:ring-2 focus:ring-white mt-2"
                 >
                   Save Changes
                 </button>
@@ -76,7 +102,7 @@ const Profile = () => {
             </div>
           </div>
         </div>
-      </section>
+      </div>
       <Footer />
     </div>
   );

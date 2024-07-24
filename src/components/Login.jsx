@@ -23,12 +23,22 @@ const Login = () => {
         loginEmail,
         loginPassword
       );
-      navigate("/");
+
+      const user = userCredential.user;
+      const userData = {
+        email: user.email,
+        password: loginPassword,
+        name: user.displayName,
+      };
+
       const UserSession = sessionStorage.setItem(
         "user",
         JSON.stringify(loginEmail)
       );
       sessionStorage.setItem("issuccess", true);
+      navigate("/");
+
+
 
       console.log(UserSession);
       setLoginEmail("");
@@ -55,7 +65,15 @@ const Login = () => {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
-      // Example: Saving user data to a database
+      // Save user session data in sessionStorage
+      const userData = {
+        email: user.email,
+        name: user.displayName,
+      };
+      sessionStorage.setItem("user", JSON.stringify(userData));
+      sessionStorage.setItem("issuccess", true);
+
+      // Save user data to database
       await axios.post(
         "https://cinema-website-b44c3-default-rtdb.europe-west1.firebasedatabase.app/users.json",
         {
@@ -64,8 +82,6 @@ const Login = () => {
           isDeleted: false,
         }
       );
-      // Save user session
-      sessionStorage.setItem("user", JSON.stringify(user.email));
 
       // Redirect to home page
       navigate("/");

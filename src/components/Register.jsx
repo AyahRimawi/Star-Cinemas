@@ -23,22 +23,30 @@ const Register = () => {
       const user = userCredential.user;
 
       // Update user profile
+      //  هاي خاصية بال firebase بمرر الها قيمتين الاولى ال doc الاساسية والتانية شو بدي اجيب منا
+      // displayName هي صيغة ثابتة من firebase
       await updateProfile(user, {
         displayName: registerName,
       });
 
       // Store user in sessionStorage
-      sessionStorage.setItem("user", JSON.stringify({
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName,
-      }));
+      sessionStorage.setItem(
+        "user",
+        JSON.stringify({
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+        })
+      );
 
       // Save user details in the Firebase Realtime Database
       const customersData = await axios.get(
         "https://cinema-website-b44c3-default-rtdb.europe-west1.firebasedatabase.app/users.json"
       );
-      const newUserId = customersData.data ? Object.keys(customersData.data).length : 0;
+      // هون بكل بساطة شو عملت ما بدي اخلي لما يروح ع real يعمل id على كيفه لأ بدي اخلي يبدأ عد من 0
+      const newUserId = customersData.data
+        ? Object.keys(customersData.data).length
+        : 0;
       await axios.put(
         `https://cinema-website-b44c3-default-rtdb.europe-west1.firebasedatabase.app/users/${newUserId}.json`,
         {
@@ -66,7 +74,10 @@ const Register = () => {
         src={ContainerImage}
         alt="/"
       />
-      <form className="max-w-[400px] w-full bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-lg p-8 shadow-lg" onSubmit={register}>
+      <form
+        className="max-w-[400px] w-full bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-lg p-8 shadow-lg"
+        onSubmit={register}
+      >
         <h2
           className="text-4xl font-bold text-center text-white pb-4"
           style={{ fontFamily: "Caveat" }}
