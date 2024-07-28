@@ -3,11 +3,13 @@ import { useState } from "react";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../firebase-config/firebase";
 import ContainerImage from "../assets/Container1.png";
+// لاحظ من ال import تبعها انو هي شو بتعمل على ادارة التنقل بين الصفحات
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { RiGoogleFill } from "react-icons/ri";
 
 const Login = () => {
+  // هاي عشان صفحة booking
   sessionStorage.setItem("issuccess", false);
 
   const [loginEmail, setLoginEmail] = useState("");
@@ -23,7 +25,7 @@ const Login = () => {
         loginEmail,
         loginPassword
       );
-
+      // الفكرة هون استخراج بيانات المستخدم وعرضها لحتى اذا كنت بدي استخدمها
       const user = userCredential.user;
       const userData = {
         email: user.email,
@@ -37,8 +39,6 @@ const Login = () => {
       );
       sessionStorage.setItem("issuccess", true);
       navigate("/");
-
-
 
       console.log(UserSession);
       setLoginEmail("");

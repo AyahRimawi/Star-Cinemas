@@ -44,6 +44,8 @@ const Register = () => {
         "https://cinema-website-b44c3-default-rtdb.europe-west1.firebasedatabase.app/users.json"
       );
       // هون بكل بساطة شو عملت ما بدي اخلي لما يروح ع real يعمل id على كيفه لأ بدي اخلي يبدأ عد من 0
+      //  الفكرة شو اني امسك مفاتيح القيم الي عندي واحولهم لمصفوفة لحتى اعرف الطول تبعها 
+      // شو عمل جملة شرطية بهاي الجملة الشرطية شيك في data او لأ اذا في اعطاها رقم حسب طول المصفوفة ما فيها اعطاها رقم 0
       const newUserId = customersData.data
         ? Object.keys(customersData.data).length
         : 0;

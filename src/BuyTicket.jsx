@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import Navbar from "./nav";
 import Footer from "./footer";
 import jsPDF from "jspdf";
+// لحتى استخدم paypal انا بحاجة اعمله import بعد ما نزلته عندي
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useNavigate } from "react-router-dom";
 
@@ -29,6 +30,9 @@ function BuyTicket() {
   const [vipTotalPrice, setVipTotalPrice] = useState(0);
   const [vipCouponCode, setVipCouponCode] = useState("");
   const [vipDiscountedPrice, setVipDiscountedPrice] = useState(0);
+ 
+  //  هاي خاصة ب payapl والهدف منها تحديد القيم ل payapl
+  
   const initialOptions = {
     "client-id":
       "AWrR0dEDBlc9AVYB7E-RbYM8HyZMGiRs_ibLN1lcJXBnv8DhZc1BuvhagRX5ycmsDSNQ3B5TxKya81_v",
@@ -36,6 +40,8 @@ function BuyTicket() {
     "disable-funding": "",
     "data-sdk-integration-source": "integrationbuilder_sc",
   };
+
+
   useEffect(() => {
     axios
       .get(
@@ -156,7 +162,7 @@ function BuyTicket() {
     doc.text(`Movie Title: ${movie.title}`, 10, 80);
     doc.text(`Number of Regular Tickets: ${ticketsCount}`, 10, 90);
     doc.text(
-      // القصة الي صارت هون انو بدي اشوف في خصم او لأ لحتى اطبعه مع ال order 
+      // القصة الي صارت هون انو بدي اشوف في خصم او لأ لحتى اطبعه مع ال order
       // بسأل هل قيمة الخصم اكبر من 0 لحظتها يعني في خصم روح جيب قيمة الخصم وقصده بال fixed انو خد بس اول رقمين عشرين
       //   اذا لأ ما في خصم طلع قيمة السعر الحقيقية
       `Total Price: ${
@@ -429,6 +435,13 @@ function BuyTicket() {
                 className="border bg-transparent mt-3 border-gray-200 rounded-md shadow-sm text-gray-400 focus:outline-none focus:border-blue-900 px-4 py-2 w-full md:w-96"
               />
             </div>
+            {/* بداية انا بحاجة انزل paypal عندي */}
+            {/* npm install @paypal/react-paypal-js */}
+            {/* لحتى اخلي paypal موجود بالتطبيق بكل بساطة بحط PayPalScriptProvider */}
+            {/* متل ما عملت بداية ل firebase هلأ كمان بعمل بداية لل paypal */}
+            {/* هلأ هاي ال initialOptions بقدر احط فيها كمان فيم محددة للبداية  */}
+            {/* client-id currency intent components */}
+            {/* وهدول بكون موقعهم قبل ال return */}
             <PayPalScriptProvider options={initialOptions}>
               <PayPalButtons
                 style={{ layout: "horizontal", shape: "rect" }}

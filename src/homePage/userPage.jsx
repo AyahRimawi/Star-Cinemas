@@ -15,6 +15,7 @@ const Profile = () => {
     const currentUser = auth.currentUser;
 
     if (currentUser) {
+      // الفائدة من  ||  هو انو في حال ما كان في قيمة لل key المطلوب حط مكان قيمته قيمة افتراضية الي هي فراغ
       setDisplayName(currentUser.displayName || "");
       setEmail(currentUser.email || "");
       const storedPassword = sessionStorage.getItem("password") || "";
@@ -22,6 +23,8 @@ const Profile = () => {
     } else {
       navigate("/login");
     }
+    //خارج useEffect، قد يتم استدعاء navigate عدة مرات في تشغيل المكون.
+    // باستخدام navigate داخل useEffect، يتم التأكد من أن الانتقال إلى صفحة أخرى يحدث فقط مرة واحدة عند تحميل المكون أو تحديثه.
   }, [navigate]);
 
   const handleSubmit = (e) => {
@@ -34,7 +37,7 @@ const Profile = () => {
     };
 
     sessionStorage.setItem("user", JSON.stringify(userData));
-    sessionStorage.setItem("password", password);
+    // sessionStorage.setItem("password", password);
 
     alert("Profile updated successfully");
   };
